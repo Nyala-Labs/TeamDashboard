@@ -6,7 +6,8 @@ import { RecognitionSection } from "@/components/RecognitionSection";
 import { EventsSection } from "@/components/EventsSection";
 import { MeetingSchedulerSection } from "@/components/MeetingSchedulerSection";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 export default function DashboardPage() {
   return (

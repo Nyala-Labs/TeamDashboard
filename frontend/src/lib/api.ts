@@ -1,6 +1,11 @@
-const defaultBase = typeof window !== "undefined" 
-  ? (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000") 
-  : "http://localhost:8000";
+// Production/Vercel: use "" so fetch("/api/...") hits same-origin Python serverless.
+// Local dev: set NEXT_PUBLIC_API_URL=http://localhost:8000 when running backend via uvicorn.
+const defaultBase =
+  process.env.NEXT_PUBLIC_API_URL !== undefined
+    ? process.env.NEXT_PUBLIC_API_URL
+    : typeof window !== "undefined"
+      ? ""
+      : "http://localhost:8000";
 
 export async function api<T>(
   path: string,

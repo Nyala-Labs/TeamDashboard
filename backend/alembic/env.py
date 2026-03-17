@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -11,10 +12,22 @@ from app.core.config import settings
 from app.models import Base
 
 config = context.config
-# Offline migrations use sync URL; online uses async
-sync_url = settings.database_url_sync
-async_url = settings.database_url
+# Read DATABASE_URL from env (Supabase) or fall back to config
+_raw = os.getenv("DATABASE_URL")
+if _raw:
+    # Sync URL for offline/sync migrations (psycopg2-style)
+    sync_url = _raw.replace("postgresql+asyncpg://", "postgresql://", 1).replace(
+        "postgres://", "postgresql://", 1
+    )
+    # Async URL for online migrations (asyncpg)
+    async_url = _raw.replace("postgres://", "postgresql://", 1)
+    if not async_url.startswith("postgresql+asyncpg"):
+        async_url = async_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+else:
+    sync_url = settings.database_url_sync
+    async_url = settings.database_url
 config.set_main_option("sqlalchemy.url", sync_url)
+config.set_main_option("sqlalchemy.async_url", async_url)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

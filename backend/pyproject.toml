@@ -17,6 +17,7 @@ dependencies = [
     "google-auth-oauthlib>=1.2.0",
     "google-api-python-client>=2.111.0",
     "apscheduler>=3.10.0",
+    "mangum>=0.17.0",
 ]
 
 [tool.hatch.build.targets.wheel]
